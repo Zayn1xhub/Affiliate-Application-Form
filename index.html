@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Apply – Limited Seats</title>
+  <style>
+    :root{ --glow-x: 0px; --glow-y: 0px; --glow-x2: 0px; --glow-y2: 0px; }
+    * { box-sizing: border-box; }
+    html,body{ height:100%; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Inter, sans-serif;
+      background: radial-gradient(circle at top, #071a38, #03060b 60%);
+      color: #ffffff;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      overflow: hidden;
+      --tint-1: rgba(26,108,255,0.35);
+      --tint-2: rgba(0,194,255,0.22);
+    }
+
+    /* Animated + interactive glows using CSS variables */
+    body::before {
+      content: "";
+      position: absolute;
+      width: 700px;
+      height: 700px;
+      background: radial-gradient(circle at 40% 40%, var(--tint-1), transparent 60%);
+      top: -220px;
+      left: -220px;
+      transform: translate(var(--glow-x), var(--glow-y));
+      transition: transform 0.12s linear;
+      filter: blur(30px);
+      pointer-events: none;
+    }
+    body::after {
+      content: "";
+      position: absolute;
+      width: 520px;
+      height: 520px;
+      background: radial-gradient(circle at 60% 60%, var(--tint-2), transparent 60%);
+      bottom: -200px;
+      right: -200px;
+      transform: translate(var(--glow-x2), var(--glow-y2));
+      transition: transform 0.14s linear;
+      filter: blur(28px);
+      pointer-events: none;
+    }
+
+    .card {
+      position: relative;
+      width: 100%;
+      max-width: 520px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));
+      border-radius: 18px;
+      padding: 28px;
+      box-shadow: 0 30px 70px rgba(0,0,0,0.65);
+      backdrop-filter: blur(12px) saturate(120%);
+      z-index: 2;
+      border: 1px solid rgba(255,255,255,0.04);
+    }
+
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items:center;
+      gap:8px;
+      background: linear-gradient(135deg, #1a6cff, #00c2ff);
+      color: #fff;
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .3px;
+    }
+
+    .lang {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.04);
+      color: #fff;
+      border-radius: 999px;
+      padding: 6px 12px;
+      font-size: 13px;
+      cursor: pointer;
+      -webkit-appearance: none;
+    }
+
+    h1 {
+      font-size: 28px;
+      margin: 6px 0 6px;
+      letter-spacing: .2px;
+    }
+
+    p.lead {
+      font-size: 14px;
+      opacity: 0.88;
+      margin-bottom: 20px;
+    }
+
+    label {
+      font-size: 13px;
+      opacity: 0.95;
+      display:block;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      margin-top: 8px;
+      margin-bottom: 16px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.06);
+      background: rgba(255,255,255,0.03);
+      color: #fff;
+      font-size: 14px;
+    }
+
+    textarea { resize: none; height: 96px; }
+
+    .cta {
+      width: 100%;
+      padding: 14px;
+      border-radius: 12px;
+      border: none;
+      background: linear-gradient(90deg, #1a6cff, #00c2ff);
+      color: #021025;
+      font-size: 15px;
+      font-weight: 800;
+      cursor: pointer;
+      letter-spacing: 0.2px;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, opacity .12s;
+    }
+    .cta:active{ transform: translateY(1px); }
+
+    .meta {
+      margin-top: 12px;
+      font-size: 12px;
+      opacity: 0.7;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+    }
+
+    .manual {
+      font-size: 12px;
+      opacity: 0.75;
+    }
+
+    /* 1XBET accent small touch */
+    .brand-flag {
+      display:inline-block;
+      padding:4px 8px;
+      border-radius:8px;
+      background: linear-gradient(90deg,#f6c400,#ff3b3b);
+      color:#021025;
+      font-weight:700;
+      font-size:12px;
+      margin-left:8px;
+    }
+
+    /* RTL tweaks when dir=rtl */
+    [dir="rtl"] .card{ direction: rtl; }
+    [dir="rtl"] label{ text-align: right; }
+    [dir="rtl"] input, [dir="rtl"] textarea { direction: rtl; }
+
+    @media (max-width:520px){
+      .card{ padding:18px; border-radius:14px; }
+      h1{ font-size:22px }
+    }
+  </style>
+</head>
+<body>
+  <div class="card" id="card">
+    <div class="top-bar">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <span class="badge">Limited Seats</span>
+        <span class="brand-flag">1XBET Vibe</span>
+      </div>
+
+      <select id="langSelect" class="lang" aria-label="Language selector">
+        <option value="en">EN</option>
+        <option value="ar">AR</option>
+        <option value="es">ES</option>
+      </select>
+    </div>
+
+    <h1 data-i="title">Affiliate Application</h1>
+    <p class="lead" data-i="subtitle">We’re onboarding a small circle of partners. Apply now — approved applicants get direct access.</p>
+
+    <form id="applyForm" onsubmit="event.preventDefault(); handleSubmit();">
+      <label data-i="labelName">Full Name</label>
+      <input id="name" data-i-field="name" type="text" placeholder="Your name" required />
+
+      <label data-i="labelEmail">Email Address</label>
+      <input id="email" data-i-field="email" type="email" placeholder="you@email.com" required />
+
+      <label data-i="labelContact">Telegram / WhatsApp</label>
+      <input id="contact" data-i-field="contact" type="text" placeholder="@username or number" required />
+
+      <label data-i="labelTraffic">Main Traffic Source</label>
+      <select id="traffic" data-i-field="traffic" required>
+        <option value="">Select one</option>
+        <option>Telegram</option>
+        <option>Instagram</option>
+        <option>TikTok</option>
+        <option>Facebook</option>
+        <option>Website</option>
+        <option>Other</option>
+      </select>
+
+      <label data-i="labelNote">Short Note</label>
+      <textarea id="note" data-i-field="note" placeholder="Tell us briefly about your traffic or experience"></textarea>
+
+      <button class="cta" id="applyBtn" type="submit" data-i="apply">Apply Now</button>
+    </form>
+
+    <div class="meta">
+      <div class="manual" id="manualText">Reviewed manually · No auto-approvals</div>
+      <div style="font-size:12px;opacity:.65;">Applications close once seats are filled</div>
+    </div>
+  </div>
+
+  <script>
+    const translations = {
+      en: {
+        title: 'Affiliate Application',
+        subtitle: `We’re onboarding a small circle of partners. Apply now — approved applicants get direct access.`,
+        labelName: 'Full Name',
+        labelEmail: 'Email Address',
+        labelContact: 'Telegram / WhatsApp',
+        labelTraffic: 'Main Traffic Source',
+        labelNote: 'Short Note',
+        apply: 'Apply Now',
+        manual: 'Reviewed manually · No auto-approvals'
+      },
+      ar: {
+        title: 'نموذج التقديم للشركاء',
+        subtitle: 'نقوم بضم مجموعة صغيرة من الشركاء. قدّم الآن — سنتواصل مع المقبولين مباشرةً.',
+        labelName: 'الاسم الكامل',
+        labelEmail: 'البريد الإلكتروني',
+        labelContact: 'تلغرام / واتساب',
+        labelTraffic: 'مصدر الزيارات الرئيسي',
+        labelNote: 'ملاحظة قصيرة',
+        apply: 'قدّم الآن',
+        manual: 'يتم المراجعة يدويًا · لا توجد موافقات تلقائية'
+      },
+      es: {
+        title: 'Solicitud de Afiliado',
+        subtitle: 'Estamos incorporando un grupo pequeño de socios. Aplica ahora — los aprobados recibirán acceso directo.',
+        labelName: 'Nombre completo',
+        labelEmail: 'Correo electrónico',
+        labelContact: 'Telegram / WhatsApp',
+        labelTraffic: 'Fuente principal de tráfico',
+        labelNote: 'Nota breve',
+        apply: 'Aplicar ahora',
+        manual: 'Revisado manualmente · Sin aprobaciones automáticas'
+      }
+    };
+
+    const langSelect = document.getElementById('langSelect');
+    const i18nEls = document.querySelectorAll('[data-i]');
+    const i18nFields = document.querySelectorAll('[data-i-field]');
+
+    function applyLanguage(lang){
+      const dict = translations[lang] || translations.en;
+      i18nEls.forEach(el => {
+        const key = el.getAttribute('data-i');
+        if(dict[key]) el.textContent = dict[key];
+      });
+      i18nFields.forEach(el=>{
+        const key = el.getAttribute('data-i-field');
+        if(dict['label' + capitalize(key)]){
+          // not all fields have placeholders translated; keep placeholders simple by using the labels
+          // but keep placeholders in English-friendly text for usability
+        }
+      });
+      document.getElementById('manualText').textContent = dict.manual;
+
+      // set html lang and direction
+      document.documentElement.lang = lang;
+      if(lang === 'ar'){
+        document.documentElement.dir = 'rtl';
+        // ensure inputs follow RTL
+        document.getElementById('card').setAttribute('dir','rtl');
+      } else {
+        document.documentElement.dir = 'ltr';
+        document.getElementById('card').setAttribute('dir','ltr');
+      }
+    }
+
+    function capitalize(s){ return s && s.charAt(0).toUpperCase() + s.slice(1); }
+
+    langSelect.addEventListener('change', (e)=> applyLanguage(e.target.value));
+
+    // init default language
+    applyLanguage('en');
+
+    // small submit handler (placeholder) — replace with real integration
+    function handleSubmit(){
+      const payload = {
+        name: document.getElementById('name').value.trim(),
+        email: document.getElementById('email').value.trim(),
+        contact: document.getElementById('contact').value.trim(),
+        traffic: document.getElementById('traffic').value,
+        note: document.getElementById('note').value.trim(),
+        lang: document.documentElement.lang
+      };
+      // visual micro-feedback
+      const btn = document.getElementById('applyBtn');
+      btn.disabled = true; btn.textContent = 'Sending...';
+      setTimeout(()=>{
+        btn.textContent = translations[document.documentElement.lang || 'en'].apply;
+        btn.disabled = false;
+        alert('Application sent — you will be contacted if approved.');
+        document.getElementById('applyForm').reset();
+      }, 900);
+
+      // TODO: replace above with fetch() to your server / zapier / google sheet endpoint
+      console.log('APPLICATION PAYLOAD', payload);
+    }
+
+    // Interactive background: track mouse and touch — move glows slightly
+    const body = document.body;
+    const maxMove = 40; // px range for glow movement
+
+    function handlePointer(x,y){
+      const cw = window.innerWidth;
+      const ch = window.innerHeight;
+      const cx = (x / cw - 0.5) * 2; // -1 .. 1
+      const cy = (y / ch - 0.5) * 2 * -1; // -1 .. 1 (invert so top moves up)
+      const gx = Math.round(cx * maxMove) + 'px';
+      const gy = Math.round(cy * maxMove) + 'px';
+      const gx2 = Math.round(cx * maxMove * -0.6) + 'px';
+      const gy2 = Math.round(cy * maxMove * -0.6) + 'px';
+      document.documentElement.style.setProperty('--glow-x', gx);
+      document.documentElement.style.setProperty('--glow-y', gy);
+      document.documentElement.style.setProperty('--glow-x2', gx2);
+      document.documentElement.style.setProperty('--glow-y2', gy2);
+    }
+
+    // mousemove for desktop
+    window.addEventListener('mousemove', (e)=>{
+      handlePointer(e.clientX, e.clientY);
+    });
+
+    // touch for mobile: on touchstart in empty space intensify glows / center around touch
+    window.addEventListener('touchstart', (e)=>{
+      const t = e.touches[0];
+      // ignore if inside the card (so taps on form don't trigger)
+      const card = document.getElementById('card');
+      const rect = card.getBoundingClientRect();
+      if(t.clientX >= rect.left && t.clientX <= rect.right && t.clientY >= rect.top && t.clientY <= rect.bottom){
+        return; // it's a tap on the form
+      }
+      // intensify and move
+      handlePointer(t.clientX, t.clientY);
+      // increase brightness while pressed
+      document.documentElement.style.setProperty('--tint-1', 'rgba(26,108,255,0.48)');
+      document.documentElement.style.setProperty('--tint-2', 'rgba(0,194,255,0.35)');
+    }, {passive:true});
+
+    window.addEventListener('touchend', ()=>{
+      // fade back
+      document.documentElement.style.setProperty('--tint-1', 'rgba(26,108,255,0.35)');
+      document.documentElement.style.setProperty('--tint-2', 'rgba(0,194,255,0.22)');
+      // gently reset glows to center
+      document.documentElement.style.setProperty('--glow-x', '0px');
+      document.documentElement.style.setProperty('--glow-y', '0px');
+      document.documentElement.style.setProperty('--glow-x2', '0px');
+      document.documentElement.style.setProperty('--glow-y2', '0px');
+    });
+
+    // small UX: clicking empty space on desktop also focuses nothing but moves glows
+    window.addEventListener('click', (e)=>{
+      const card = document.getElementById('card');
+      if(!card.contains(e.target)){
+        handlePointer(e.clientX, e.clientY);
+      }
+    });
+
+    // Accessibility: keyboard language switching (Alt+L) quick toggle
+    window.addEventListener('keydown', (e)=>{
+      if(e.altKey && e.key.toLowerCase() === 'l'){
+        const next = { en:'ar', ar:'es', es:'en' }[document.documentElement.lang || 'en'];
+        langSelect.value = next; applyLanguage(next);
+      }
+    });
+  </script>
+</body>
+</html>
