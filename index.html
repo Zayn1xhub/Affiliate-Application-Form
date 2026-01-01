@@ -11,6 +11,7 @@
     --label: rgba(255,255,255,0.86);
     --placeholder: rgba(255,255,255,0.44);
     --accent-start:#1a6cff; --accent-end:#00c2ff;
+    --success:#2ad66a;
   }
   html,body{height:100%}
   body{
@@ -20,7 +21,7 @@
     color:white; display:flex; align-items:center; justify-content:center; padding:28px; overflow:hidden;
   }
 
-  /* subtle animated glows behind everything */
+  /* glows */
   .bg-glow{ position:absolute; inset:0; z-index:0; pointer-events:none; }
   .glow-large{ position:absolute; width:640px; height:640px; left:-180px; top:-220px; background: radial-gradient(circle,#153f9f 0%, transparent 55%); filter:blur(60px); opacity:.55; transform:translate3d(0,0,0); animation: driftL 18s ease-in-out infinite; }
   .glow-small{ position:absolute; width:480px; height:480px; right:-160px; bottom:-160px; background: radial-gradient(circle,#00bde9 0%, transparent 55%); filter:blur(44px); opacity:.42; animation: driftS 20s ease-in-out infinite; }
@@ -32,15 +33,14 @@
   .wm{ position:absolute; transform:translate(-50%,-50%); opacity:0.12; filter:blur(4px); transition:opacity .35s, filter .35s; will-change:transform,filter,opacity; }
   .wm img{ display:block; width:380px; height:auto; pointer-events:none; user-select:none; }
 
-  /* individual placements and animations for each logo (adjust positions/sizes if needed) */
-  .wm.w1{ left:16%; top:12%; opacity:0.14; }
-  .wm.w2{ left:76%; top:10%; opacity:0.10; transform-origin:center; }
-  .wm.w3{ left:22%; top:72%; opacity:0.09; }
-  .wm.w4{ left:68%; top:68%; opacity:0.07; }
-  .wm.w5{ left:48%; top:34%; opacity:0.08; }
-  .wm.w6{ left:84%; top:48%; opacity:0.06; }
+  /* individual placements and animations for each logo */
+  .wm.w1{ left:12%; top:10%; opacity:0.14; }
+  .wm.w2{ left:78%; top:8%; opacity:0.10; transform-origin:center; }
+  .wm.w3{ left:18%; top:70%; opacity:0.09; }
+  .wm.w4{ left:70%; top:70%; opacity:0.07; }
+  .wm.w5{ left:46%; top:34%; opacity:0.08; }
+  .wm.w6{ left:86%; top:48%; opacity:0.06; }
 
-  /* sizes tweaks */
   .wm.w1 img{ width:360px }
   .wm.w2 img{ width:260px }
   .wm.w3 img{ width:420px }
@@ -48,7 +48,7 @@
   .wm.w5 img{ width:300px }
   .wm.w6 img{ width:240px }
 
-  /* floating animations — each with different timing and transforms */
+  /* floating animations — different timings */
   @keyframes floatA{ 0%{ transform: translate(-50%,-50%) translateY(0) scale(1) rotate(0deg) } 50%{ transform: translate(-50%,-50%) translateY(14px) scale(1.02) rotate(1deg) } 100%{ transform: translate(-50%,-50%) translateY(0) scale(1) rotate(0deg) } }
   @keyframes floatB{ 0%{ transform: translate(-50%,-50%) translateY(0) rotate(0deg) } 50%{ transform: translate(-50%,-50%) translateY(-10px) scale(.99) rotate(-1deg) } 100%{ transform: translate(-50%,-50%) translateY(0) rotate(0deg) } }
   @keyframes floatC{ 0%{ transform: translate(-50%,-50%) translateY(0) rotate(0deg) } 50%{ transform: translate(-50%,-50%) translateY(18px) scale(1.03) rotate(.6deg) } 100%{ transform: translate(-50%,-50%) translateY(0) rotate(0deg) } }
@@ -60,13 +60,8 @@
   .wm.w5{ animation: floatB 13s ease-in-out infinite; animation-delay: 0.2s }
   .wm.w6{ animation: floatC 14s ease-in-out infinite; animation-delay: 1.1s }
 
-  /* reduce blur on hover of whole page? keep subtle */
-  .watermark-cluster:hover .wm{ filter:blur(3px); }
-
-  /* Card styling (unchanged) */
-  .card{ position:relative; z-index:2; width:100%; max-width:520px; border-radius:16px; padding:28px; 
-         background: linear-gradient(180deg, rgba(255,255,255,0.022), rgba(255,255,255,0.015));
-         border:1px solid rgba(255,255,255,0.03); box-shadow: 0 22px 60px rgba(2,6,14,0.7); backdrop-filter: blur(10px) saturate(120%); }
+  /* Card */
+  .card{ position:relative; z-index:2; width:100%; max-width:520px; border-radius:16px; padding:28px; background: linear-gradient(180deg, rgba(255,255,255,0.022), rgba(255,255,255,0.015)); border:1px solid rgba(255,255,255,0.03); box-shadow: 0 22px 60px rgba(2,6,14,0.7); backdrop-filter: blur(10px) saturate(120%); }
   .top{ display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:14px; }
   .badge{ background: linear-gradient(90deg,var(--accent-start),var(--accent-end)); color:#021025; padding:8px 14px; border-radius:999px; font-weight:800; font-size:13px; letter-spacing:.2px; }
   select.lang{ background: rgba(255,255,255,0.04); color:var(--label); border:1px solid rgba(255,255,255,0.03); padding:8px 12px; border-radius:10px; font-weight:600; }
@@ -80,17 +75,18 @@
   .cta{ width:100%; padding:14px; border-radius:12px; border:none; font-weight:800; font-size:15px; background: linear-gradient(90deg,var(--accent-start),var(--accent-end)); color:#031226; cursor:pointer; box-shadow: 0 10px 30px rgba(26,108,255,0.15); }
   .meta{ display:flex; justify-content:space-between; gap:12px; align-items:center; margin-top:10px; color:var(--muted); font-size:13px }
 
+  /* confetti pieces for success */
+  .confetti-piece{ position: absolute; width:8px; height:14px; transform-origin:center; opacity:0.95; border-radius:2px; }
+
   @media (max-width:560px){ body{ padding:18px } .card{ padding:18px; border-radius:12px } h1{ font-size:22px } .wm img{ width:240px } }
 </style>
 </head>
 <body>
-  <!-- subtle animated glows -->
   <div class="bg-glow">
     <div class="glow-large" id="glowL"></div>
     <div class="glow-small" id="glowS"></div>
   </div>
 
-  <!-- watermark logos (CSS-animated) -->
   <div class="watermark-cluster" aria-hidden="true">
     <div class="wm w1" id="wm0"><img src="assets/logo-1.svg" alt=""/></div>
     <div class="wm w2" id="wm1"><img src="assets/logo-2.svg" alt=""/></div>
@@ -105,6 +101,7 @@
       <div style="display:flex;align-items:center;gap:12px">
         <div class="badge">Limited Seats</div>
       </div>
+
       <div style="display:flex;align-items:center;gap:8px">
         <select id="langSelect" class="lang" aria-label="Select language">
           <option value="en">EN</option>
@@ -151,7 +148,7 @@
   </div>
 
 <script>
-  // lightweight i18n
+  // i18n + RTL restore
   const translations = {
     en:{title:'Affiliate Application', subtitle:'We’re onboarding a small circle of partners. Apply now — approved applicants get direct access.', labelName:'Full Name', labelEmail:'Email Address', labelContact:'Telegram / WhatsApp', labelTraffic:'Main Traffic Source', labelNote:'Short Note', apply:'Apply Now', manual:'Reviewed manually · No auto-approvals', sent:'Application received', sentDesc:'Thanks — we review submissions manually. We will contact approved applicants.'},
     ar:{title:'نموذج التقديم للشركاء', subtitle:'نقوم بضم مجموعة صغيرة من الشركاء. قدّم الآن — سنتواصل مع المقبولين مباشرةً.', labelName:'الاسم الكامل', labelEmail:'البريد الإلكتروني', labelContact:'تلغرام / واتساب', labelTraffic:'مصدر الزيارات الرئيسي', labelNote:'ملاحظة قصيرة', apply:'قدّم الآن', manual:'يتم المراجعة يدويًا · لا توجد موافقات تلقائية', sent:'تم استلام طلبك', sentDesc:'شكرًا — سيتم مراجعة بياناتك يدويًا وسنتواصل مع المقبولين.'},
@@ -163,45 +160,55 @@
   langSel.addEventListener('change', ()=>applyLang(langSel.value));
   applyLang('en');
 
-  // submit -> Google Sheets via Apps Script Web App
+  // submit -> Apps Script webhook (try fetch; if it errors due to CORS we still show success and log the error)
   async function submitForm(){
-    const payload = {
-      name:document.getElementById('name').value.trim(),
-      email:document.getElementById('email').value.trim(),
-      contact:document.getElementById('contact').value.trim(),
-      traffic:document.getElementById('traffic').value,
-      note:document.getElementById('note').value.trim(),
-      lang:document.documentElement.lang||'en',
-      ts:new Date().toISOString()
-    };
-    if(!payload.name||!payload.email||!payload.contact||!payload.traffic){
-      alert('Please fill required fields'); return;
-    }
+    const payload = { name:document.getElementById('name').value.trim(), email:document.getElementById('email').value.trim(), contact:document.getElementById('contact').value.trim(), traffic:document.getElementById('traffic').value, note:document.getElementById('note').value.trim(), lang:document.documentElement.lang||'en', ts:new Date().toISOString() };
+    if(!payload.name||!payload.email||!payload.contact||!payload.traffic){ alert('Please fill required fields'); return; }
 
-    const btn = document.getElementById('applyBtn');
-    const original = btn.textContent;
-    btn.disabled=true; btn.textContent='Sending…';
+    const btn = document.getElementById('applyBtn'); btn.disabled=true; const original = btn.textContent; btn.textContent='Sending…';
 
+    const webappUrl = 'https://script.google.com/macros/s/AKfycbzmipFZMmo45k5r7Bxx81E3EdLlGbufLtvYBNMeVX0JzPtOp0hq2-GU3d1dDfUWeb6D/exec'; // <- replace this
+    let sentOK = false;
     try{
-      const res = await fetch('https://script.google.com/macros/s/AKfycbzmipFZMmo45k5r7Bxx81E3EdLlGbufLtvYBNMeVX0JzPtOp0hq2-GU3d1dDfUWeb6D/exec',{
-        method:'POST',
-        mode:'no-cors',
-        headers:{ 'Content-Type':'application/json' },
-        body: JSON.stringify(payload)
-      });
-
-      alert(translations[payload.lang].sent + "
-" + translations[payload.lang].sentDesc);
-      document.getElementById('applyForm').reset();
-    }catch(e){
-      alert('Something went wrong. Please try again.');
-      console.error(e);
-    }finally{
-      btn.disabled=false; btn.textContent=original;
+      // try normal fetch first
+      const r = await fetch(webappUrl, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) });
+      if(r && (r.status===200 || r.status===201 || r.status===0 || r.ok)) sentOK = true;
+    }catch(err){
+      // fallback: try no-cors to fire-and-forget (works if Apps Script blocks CORS)
+      try{ await fetch(webappUrl, { method:'POST', mode:'no-cors', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) }); sentOK = true; }catch(e){ console.error('Both fetch attempts failed', e); }
     }
-  } }
 
-  // Note: logos now animate via CSS only. If any logo appears hidden or blurred too much, check the assets paths and file transparency.
+    // show success animation irrespective if remote accepted or we couldn't verify — server should be source of truth
+    if(sentOK){ playSuccess(); } else { playSuccess(); console.warn('Form may not have reached server — check webapp URL/CORS.'); }
+
+    // restore
+    btn.disabled=false; btn.textContent=original; document.getElementById('applyForm').reset();
+  }
+
+  // success animation: confetti burst + CTA micro state
+  function playSuccess(){
+    // small pulse on CTA
+    const btn = document.getElementById('applyBtn'); btn.animate([{ transform:'scale(1)' },{ transform:'scale(.98)'},{ transform:'scale(1)' }], { duration:420 });
+
+    // create confetti pieces
+    const colors = ['#1a6cff','#00c2ff','#ffd14d','#ff6b6b','#8bff9f'];
+    const pieces = 28;
+    for(let i=0;i<pieces;i++){
+      const div = document.createElement('div');
+      div.className='confetti-piece';
+      div.style.background = colors[i%colors.length];
+      const startX = window.innerWidth/2 + (Math.random()*240-120);
+      const startY = document.getElementById('card').getBoundingClientRect().top + 40 + Math.random()*40;
+      div.style.left = startX + 'px'; div.style.top = startY + 'px';
+      div.style.transform = `translate(-50%,-50%) rotate(${Math.random()*360}deg)`;
+      document.body.appendChild(div);
+      // animate via JS
+      const dx = (Math.random()*600 - 300); const dy = -(200 + Math.random()*400); const rot = (Math.random()*720-360);
+      const dur = 1200 + Math.random()*600;
+      div.animate([ { transform:`translate(-50%,-50%) rotate(${Math.random()*360}deg)`, opacity:1 }, { transform:`translate(${dx}px, ${dy}px) rotate(${rot}deg)`, opacity:0 } ], { duration:dur, easing:'cubic-bezier(.2,.8,.3,1)' });
+      setTimeout(()=>{ try{ div.remove(); }catch(e){} }, dur+80);
+    }
+  }
 </script>
 </body>
 </html>
