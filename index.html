@@ -18,7 +18,9 @@
     margin:0; font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial;
     background: radial-gradient( circle at 15% 10%, rgba(8,30,70,0.45), transparent 12%),
                 linear-gradient(180deg,var(--bg-1),var(--bg-2) 60%);
-    color:white; display:flex; align-items:center; justify-content:center; padding:28px; overflow:hidden;
+    color:white; display:flex; align-items:center; justify-content:center; padding:28px; 
+    /* Changed to auto to allow scrolling if the new field makes form taller on mobile */
+    overflow-y:auto; overflow-x:hidden; 
   }
 
   /* glows */
@@ -28,12 +30,11 @@
   @keyframes driftL{ 0%{ transform:translate3d(0,0,0)} 50%{ transform:translate3d(24px,14px,0)} 100%{ transform:translate3d(0,0,0)} }
   @keyframes driftS{ 0%{ transform:translate3d(0,0,0)} 50%{ transform:translate3d(-18px,-10px,0)} 100%{ transform:translate3d(0,0,0)} }
 
-  /* watermark logo cluster: CSS-only independent animations */
+  /* watermark logo cluster */
   .watermark-cluster{ position:absolute; inset:0; z-index:0; pointer-events:none; }
   .wm{ position:absolute; transform:translate(-50%,-50%); opacity:0.12; filter:blur(4px); transition:opacity .35s, filter .35s; will-change:transform,filter,opacity; }
   .wm img{ display:block; width:380px; height:auto; pointer-events:none; user-select:none; }
 
-  /* individual placements and animations for each logo */
   .wm.w1{ left:12%; top:10%; opacity:0.14; }
   .wm.w2{ left:78%; top:8%; opacity:0.10; transform-origin:center; }
   .wm.w3{ left:18%; top:70%; opacity:0.09; }
@@ -48,7 +49,6 @@
   .wm.w5 img{ width:300px }
   .wm.w6 img{ width:240px }
 
-  /* floating animations — different timings */
   @keyframes floatA{ 0%{ transform: translate(-50%,-50%) translateY(0) scale(1) rotate(0deg) } 50%{ transform: translate(-50%,-50%) translateY(14px) scale(1.02) rotate(1deg) } 100%{ transform: translate(-50%,-50%) translateY(0) scale(1) rotate(0deg) } }
   @keyframes floatB{ 0%{ transform: translate(-50%,-50%) translateY(0) rotate(0deg) } 50%{ transform: translate(-50%,-50%) translateY(-10px) scale(.99) rotate(-1deg) } 100%{ transform: translate(-50%,-50%) translateY(0) rotate(0deg) } }
   @keyframes floatC{ 0%{ transform: translate(-50%,-50%) translateY(0) rotate(0deg) } 50%{ transform: translate(-50%,-50%) translateY(18px) scale(1.03) rotate(.6deg) } 100%{ transform: translate(-50%,-50%) translateY(0) rotate(0deg) } }
@@ -61,14 +61,14 @@
   .wm.w6{ animation: floatC 14s ease-in-out infinite; animation-delay: 1.1s }
 
   /* Card */
-  .card{ position:relative; z-index:2; width:100%; max-width:520px; border-radius:16px; padding:28px; background: linear-gradient(180deg, rgba(255,255,255,0.022), rgba(255,255,255,0.015)); border:1px solid rgba(255,255,255,0.03); box-shadow: 0 22px 60px rgba(2,6,14,0.7); backdrop-filter: blur(10px) saturate(120%); }
+  .card{ position:relative; z-index:2; width:100%; max-width:520px; border-radius:16px; padding:28px; background: linear-gradient(180deg, rgba(255,255,255,0.022), rgba(255,255,255,0.015)); border:1px solid rgba(255,255,255,0.03); box-shadow: 0 22px 60px rgba(2,6,14,0.7); backdrop-filter: blur(10px) saturate(120%); margin: auto; }
   .top{ display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:14px; }
   .badge{ background: linear-gradient(90deg,var(--accent-start),var(--accent-end)); color:#021025; padding:8px 14px; border-radius:999px; font-weight:800; font-size:13px; letter-spacing:.2px; }
   select.lang{ background: rgba(255,255,255,0.04); color:var(--label); border:1px solid rgba(255,255,255,0.03); padding:8px 12px; border-radius:10px; font-weight:600; }
   h1{ margin:6px 0 8px; font-size:30px; letter-spacing:.2px; color:#fff; }
   .lead{ color:var(--muted); font-size:14px; margin-bottom:18px; line-height:1.45 }
   form label{ display:block; font-size:13px; color:var(--label); margin-bottom:6px; font-weight:600 }
-  input, select, textarea{ width:100%; padding:12px 14px; border-radius:12px; border:1px solid rgba(0,0,0,0.25); background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.02)); color:#fff; outline:none; box-shadow: inset 0 1px 0 rgba(255,255,255,0.02); font-size:14px; margin-bottom:16px; }
+  input, select, textarea{ width:100%; padding:12px 14px; border-radius:12px; border:1px solid rgba(0,0,0,0.25); background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.02)); color:#fff; outline:none; box-shadow: inset 0 1px 0 rgba(255,255,255,0.02); font-size:14px; margin-bottom:16px; box-sizing: border-box; }
   input::placeholder, textarea::placeholder{ color:var(--placeholder); font-weight:500 }
   input:focus, select:focus, textarea:focus{ box-shadow: 0 6px 30px rgba(26,108,255,0.12); border-color: rgba(26,108,255,0.9); transform: translateZ(0); }
   textarea{ min-height:96px; resize:vertical; }
@@ -76,7 +76,7 @@
   .meta{ display:flex; justify-content:space-between; gap:12px; align-items:center; margin-top:10px; color:var(--muted); font-size:13px }
 
   /* confetti pieces for success */
-  .confetti-piece{ position: absolute; width:8px; height:14px; transform-origin:center; opacity:0.95; border-radius:2px; }
+  .confetti-piece{ position: absolute; width:8px; height:14px; transform-origin:center; opacity:0.95; border-radius:2px; pointer-events:none; }
 
   @media (max-width:560px){ body{ padding:18px } .card{ padding:18px; border-radius:12px } h1{ font-size:22px } .wm img{ width:240px } }
 </style>
@@ -120,6 +120,9 @@
 
       <label for="email" id="labelEmail">Email Address</label>
       <input id="email" name="email" type="email" placeholder="you@email.com" required />
+      
+      <label for="phone" id="labelPhone">Phone Number</label>
+      <input id="phone" name="phone" type="tel" placeholder="+1 234 567 890" required />
 
       <label for="contact" id="labelContact">Telegram / WhatsApp</label>
       <input id="contact" name="contact" type="text" placeholder="@username or number" required />
@@ -148,22 +151,94 @@
   </div>
 
 <script>
-  // i18n + RTL restore
+  // i18n + RTL restore + PLACEHOLDERS
   const translations = {
-    en:{title:'Affiliate Application', subtitle:'We’re onboarding a small circle of partners. Apply now — approved applicants get direct access.', labelName:'Full Name', labelEmail:'Email Address', labelContact:'Telegram / WhatsApp', labelTraffic:'Main Traffic Source', labelNote:'Short Note', apply:'Apply Now', manual:'Reviewed manually · No auto-approvals', sent:'Application received', sentDesc:'Thanks — we review submissions manually. We will contact approved applicants.'},
-    ar:{title:'نموذج التقديم للشركاء', subtitle:'نقوم بضم مجموعة صغيرة من الشركاء. قدّم الآن — سنتواصل مع المقبولين مباشرةً.', labelName:'الاسم الكامل', labelEmail:'البريد الإلكتروني', labelContact:'تلغرام / واتساب', labelTraffic:'مصدر الزيارات الرئيسي', labelNote:'ملاحظة قصيرة', apply:'قدّم الآن', manual:'يتم المراجعة يدويًا · لا توجد موافقات تلقائية', sent:'تم استلام طلبك', sentDesc:'شكرًا — سيتم مراجعة بياناتك يدويًا وسنتواصل مع المقبولين.'},
-    es:{title:'Solicitud de Afiliado', subtitle:'Estamos incorporando un grupo pequeño de socios. Aplica ahora — los aprobados recibirán acceso directo.', labelName:'Nombre completo', labelEmail:'Correo electrónico', labelContact:'Telegram / WhatsApp', labelTraffic:'Fuente principal de tráfico', labelNote:'Nota breve', apply:'Aplicar ahora', manual:'Revisado manualmente · Sin aprobaciones automáticas', sent:'Solicitud recibida', sentDesc:'Gracias — revisaremos manualmente. Nos comunicaremos con los aprobados.'}
+    en:{
+        title:'Affiliate Application', 
+        subtitle:'We’re onboarding a small circle of partners. Apply now — approved applicants get direct access.', 
+        labelName:'Full Name', holderName:'Your name',
+        labelEmail:'Email Address', holderEmail:'you@email.com',
+        labelPhone:'Phone Number', holderPhone:'+1 234 567 890',
+        labelContact:'Telegram / WhatsApp', holderContact:'@username or number',
+        labelTraffic:'Main Traffic Source', 
+        labelNote:'Short Note', holderNote:'Tell us briefly about your traffic or experience',
+        apply:'Apply Now', manual:'Reviewed manually · No auto-approvals', sent:'Application received', sentDesc:'Thanks — we review submissions manually.'
+    },
+    ar:{
+        title:'نموذج التقديم للشركاء', 
+        subtitle:'نقوم بضم مجموعة صغيرة من الشركاء. قدّم الآن — سنتواصل مع المقبولين مباشرةً.', 
+        labelName:'الاسم الكامل', holderName:'الاسم الكريم',
+        labelEmail:'البريد الإلكتروني', holderEmail:'name@email.com',
+        labelPhone:'رقم الهاتف', holderPhone:'+971 50 123 4567',
+        labelContact:'تلغرام / واتساب', holderContact:'@username أو رقم',
+        labelTraffic:'مصدر الزيارات الرئيسي', 
+        labelNote:'ملاحظة قصيرة', holderNote:'أخبرنا باختصار عن مصدر زياراتك أو خبرتك',
+        apply:'قدّم الآن', manual:'يتم المراجعة يدويًا · لا توجد موافقات تلقائية', sent:'تم استلام طلبك', sentDesc:'شكرًا — سيتم مراجعة بياناتك يدويًا.'
+    },
+    es:{
+        title:'Solicitud de Afiliado', 
+        subtitle:'Estamos incorporando un grupo pequeño de socios. Aplica ahora — los aprobados recibirán acceso directo.', 
+        labelName:'Nombre completo', holderName:'Tu nombre',
+        labelEmail:'Correo electrónico', holderEmail:'tu@email.com',
+        labelPhone:'Número de teléfono', holderPhone:'+34 123 456 789',
+        labelContact:'Telegram / WhatsApp', holderContact:'@usuario o número',
+        labelTraffic:'Fuente principal de tráfico', 
+        labelNote:'Nota breve', holderNote:'Cuéntanos brevemente sobre tu tráfico o experiencia',
+        apply:'Aplicar ahora', manual:'Revisado manualmente · Sin aprobaciones automáticas', sent:'Solicitud recibida', sentDesc:'Gracias — revisaremos manualmente.'
+    }
   };
 
   const langSel = document.getElementById('langSelect');
-  function applyLang(l){ const d = translations[l]||translations.en; document.getElementById('title').textContent = d.title; document.getElementById('subtitle').textContent = d.subtitle; document.getElementById('labelName').textContent = d.labelName; document.getElementById('labelEmail').textContent = d.labelEmail; document.getElementById('labelContact').textContent = d.labelContact; document.getElementById('labelTraffic').textContent = d.labelTraffic; document.getElementById('labelNote').textContent = d.labelNote; document.getElementById('applyBtn').textContent = d.apply; document.getElementById('manualText').textContent = d.manual; document.documentElement.lang = l; if(l==='ar'){ document.documentElement.dir='rtl'; document.getElementById('card').dir='rtl'; } else{ document.documentElement.dir='ltr'; document.getElementById('card').dir='ltr'; } }
+  
+  function applyLang(l){ 
+      const d = translations[l]||translations.en; 
+      
+      // Text Content
+      document.getElementById('title').textContent = d.title; 
+      document.getElementById('subtitle').textContent = d.subtitle; 
+      document.getElementById('labelName').textContent = d.labelName; 
+      document.getElementById('labelEmail').textContent = d.labelEmail; 
+      document.getElementById('labelPhone').textContent = d.labelPhone; // New Label
+      document.getElementById('labelContact').textContent = d.labelContact; 
+      document.getElementById('labelTraffic').textContent = d.labelTraffic; 
+      document.getElementById('labelNote').textContent = d.labelNote; 
+      document.getElementById('applyBtn').textContent = d.apply; 
+      document.getElementById('manualText').textContent = d.manual; 
+
+      // Placeholders
+      document.getElementById('name').placeholder = d.holderName;
+      document.getElementById('email').placeholder = d.holderEmail;
+      document.getElementById('phone').placeholder = d.holderPhone; // New Placeholder
+      document.getElementById('contact').placeholder = d.holderContact;
+      document.getElementById('note').placeholder = d.holderNote;
+
+      document.documentElement.lang = l; 
+      if(l==='ar'){ 
+          document.documentElement.dir='rtl'; 
+          document.getElementById('card').dir='rtl'; 
+      } else{ 
+          document.documentElement.dir='ltr'; 
+          document.getElementById('card').dir='ltr'; 
+      } 
+  }
   langSel.addEventListener('change', ()=>applyLang(langSel.value));
   applyLang('en');
 
-  // submit -> Apps Script webhook (try fetch; if it errors due to CORS we still show success and log the error)
+  // submit -> Apps Script webhook
   async function submitForm(){
-    const payload = { name:document.getElementById('name').value.trim(), email:document.getElementById('email').value.trim(), contact:document.getElementById('contact').value.trim(), traffic:document.getElementById('traffic').value, note:document.getElementById('note').value.trim(), lang:document.documentElement.lang||'en', ts:new Date().toISOString() };
-    if(!payload.name||!payload.email||!payload.contact||!payload.traffic){ alert('Please fill required fields'); return; }
+    const payload = { 
+        name:document.getElementById('name').value.trim(), 
+        email:document.getElementById('email').value.trim(), 
+        phone:document.getElementById('phone').value.trim(), // Added to payload
+        contact:document.getElementById('contact').value.trim(), 
+        traffic:document.getElementById('traffic').value, 
+        note:document.getElementById('note').value.trim(), 
+        lang:document.documentElement.lang||'en', 
+        ts:new Date().toISOString() 
+    };
+    
+    // Updated validation
+    if(!payload.name||!payload.email||!payload.phone||!payload.contact||!payload.traffic){ alert('Please fill required fields'); return; }
 
     const btn = document.getElementById('applyBtn'); btn.disabled=true; const original = btn.textContent; btn.textContent='Sending…';
 
@@ -174,25 +249,23 @@
       const r = await fetch(webappUrl, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) });
       if(r && (r.status===200 || r.status===201 || r.status===0 || r.ok)) sentOK = true;
     }catch(err){
-      // fallback: try no-cors to fire-and-forget (works if Apps Script blocks CORS)
+      // fallback
       try{ await fetch(webappUrl, { method:'POST', mode:'no-cors', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) }); sentOK = true; }catch(e){ console.error('Both fetch attempts failed', e); }
     }
 
-    // show success animation irrespective if remote accepted or we couldn't verify — server should be source of truth
     if(sentOK){ playSuccess(); } else { playSuccess(); console.warn('Form may not have reached server — check webapp URL/CORS.'); }
 
-    // restore
     btn.disabled=false; btn.textContent=original; document.getElementById('applyForm').reset();
   }
 
-  // success animation: confetti burst + CTA micro state
+  // success animation: confetti burst
   function playSuccess(){
     // small pulse on CTA
     const btn = document.getElementById('applyBtn'); btn.animate([{ transform:'scale(1)' },{ transform:'scale(.98)'},{ transform:'scale(1)' }], { duration:420 });
 
     // create confetti pieces
     const colors = ['#1a6cff','#00c2ff','#ffd14d','#ff6b6b','#8bff9f'];
-    const pieces = 28;
+    const pieces = 80; // Increased from 28 to 80
     for(let i=0;i<pieces;i++){
       const div = document.createElement('div');
       div.className='confetti-piece';
@@ -202,8 +275,10 @@
       div.style.left = startX + 'px'; div.style.top = startY + 'px';
       div.style.transform = `translate(-50%,-50%) rotate(${Math.random()*360}deg)`;
       document.body.appendChild(div);
-      // animate via JS
-      const dx = (Math.random()*600 - 300); const dy = -(200 + Math.random()*400); const rot = (Math.random()*720-360);
+      
+      const dx = (Math.random()*800 - 400); // Wider spread
+      const dy = -(200 + Math.random()*500); // Higher explosion
+      const rot = (Math.random()*720-360);
       const dur = 1200 + Math.random()*600;
       div.animate([ { transform:`translate(-50%,-50%) rotate(${Math.random()*360}deg)`, opacity:1 }, { transform:`translate(${dx}px, ${dy}px) rotate(${rot}deg)`, opacity:0 } ], { duration:dur, easing:'cubic-bezier(.2,.8,.3,1)' });
       setTimeout(()=>{ try{ div.remove(); }catch(e){} }, dur+80);
