@@ -163,9 +163,43 @@
   langSel.addEventListener('change', ()=>applyLang(langSel.value));
   applyLang('en');
 
-  // submit placeholder
-  function submitForm(){ const payload = { name:document.getElementById('name').value.trim(), email:document.getElementById('email').value.trim(), contact:document.getElementById('contact').value.trim(), traffic:document.getElementById('traffic').value, note:document.getElementById('note').value.trim(), lang:document.documentElement.lang||'en' }; if(!payload.name||!payload.email||!payload.contact||!payload.traffic){ alert('Please fill required fields'); return; } const btn = document.getElementById('applyBtn'); btn.disabled=true; const original = btn.textContent; btn.textContent='Sending...'; setTimeout(()=>{ btn.disabled=false; btn.textContent = original; alert(translations[payload.lang||'en'].sent + "
-" + translations[payload.lang||'en'].sentDesc); document.getElementById('applyForm').reset(); }, 800); console.log('FORM PAYLOAD', payload); }
+  // submit -> Google Sheets via Apps Script Web App
+  async function submitForm(){
+    const payload = {
+      name:document.getElementById('name').value.trim(),
+      email:document.getElementById('email').value.trim(),
+      contact:document.getElementById('contact').value.trim(),
+      traffic:document.getElementById('traffic').value,
+      note:document.getElementById('note').value.trim(),
+      lang:document.documentElement.lang||'en',
+      ts:new Date().toISOString()
+    };
+    if(!payload.name||!payload.email||!payload.contact||!payload.traffic){
+      alert('Please fill required fields'); return;
+    }
+
+    const btn = document.getElementById('applyBtn');
+    const original = btn.textContent;
+    btn.disabled=true; btn.textContent='Sending…';
+
+    try{
+      const res = await fetch('https://script.google.com/macros/s/AKfycbzmipFZMmo45k5r7Bxx81E3EdLlGbufLtvYBNMeVX0JzPtOp0hq2-GU3d1dDfUWeb6D/exec',{
+        method:'POST',
+        mode:'no-cors',
+        headers:{ 'Content-Type':'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      alert(translations[payload.lang].sent + "
+" + translations[payload.lang].sentDesc);
+      document.getElementById('applyForm').reset();
+    }catch(e){
+      alert('Something went wrong. Please try again.');
+      console.error(e);
+    }finally{
+      btn.disabled=false; btn.textContent=original;
+    }
+  } }
 
   // Note: logos now animate via CSS only. If any logo appears hidden or blurred too much, check the assets paths and file transparency.
 </script>
