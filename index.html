@@ -12,7 +12,7 @@
     --label: rgba(255,255,255,0.86);
     --placeholder: rgba(255,255,255,0.44);
     --accent-start:#1a6cff; --accent-end:#00c2ff;
-    --success:#2ad66a;
+    --trail-color: rgba(26,108,255,0.95);
   }
   html,body{height:100%}
   body{
@@ -22,17 +22,24 @@
     color:white; display:flex; align-items:center; justify-content:center; padding:28px; overflow:hidden;
   }
 
-  /* background glows + logo watermark cluster (behind card) */
+  /* glows */
   .bg-glow{ position:absolute; inset:0; z-index:0; pointer-events:none; }
   .glow-large{ position:absolute; width:640px; height:640px; left:-180px; top:-220px; background: radial-gradient(circle,#153f9f 0%, transparent 55%); filter:blur(60px); opacity:.55; transform:translate3d(0,0,0); transition:transform .12s linear; }
   .glow-small{ position:absolute; width:480px; height:480px; right:-160px; bottom:-160px; background: radial-gradient(circle,#00bde9 0%, transparent 55%); filter:blur(44px); opacity:.42; transition:transform .14s linear; }
 
+  /* watermark logo cluster (more logos now) */
   .watermark-cluster{ position:absolute; inset:0; z-index:0; pointer-events:none; }
-  .wm{ position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); opacity:0.06; filter:blur(4px); transition:transform .45s, opacity .35s, filter .35s; }
-  .wm img{ display:block; width:360px; height:auto; }
+  .wm{ position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); opacity:0.06; filter:blur(6px); transition:transform .45s, opacity .35s, filter .35s; }
+  .wm img{ display:block; width:360px; height:auto; pointer-events:none; user-select:none; }
   .wm.w2 img{ width:260px; }
   .wm.w3 img{ width:420px; }
   .wm.w4 img{ width:200px; }
+  .wm.w5 img{ width:300px; }
+  .wm.w6 img{ width:240px; }
+
+  /* subtle float animation */
+  @keyframes floaty{ 0%{ transform: translateY(0) } 50%{ transform: translateY(18px) } 100%{ transform: translateY(0) } }
+  .wm.anim{ animation: floaty 9s ease-in-out infinite; }
 
   /* Card */
   .card{ position:relative; z-index:2; width:100%; max-width:520px; border-radius:16px; padding:28px; 
@@ -66,24 +73,14 @@
   .meta{ display:flex; justify-content:space-between; gap:12px; align-items:center; margin-top:10px; color:var(--muted); font-size:13px }
   .meta .manual{ font-weight:600 }
 
-  /* seats pill */
-  .seats-pill{ position:absolute; top:18px; right:18px; z-index:3; background: rgba(0,0,0,0.28); padding:8px 12px; border-radius:999px; border:1px solid rgba(255,255,255,0.04); color:var(--muted); font-weight:700; display:flex; gap:10px; align-items:center; font-size:13px; }
-
-  /* modal */
-  .modal{ position:fixed; inset:0; display:flex; align-items:center; justify-content:center; z-index:9999; background: rgba(3,6,10,0.6); opacity:0; pointer-events:none; transition:opacity .22s; }
-  .modal.open{ opacity:1; pointer-events:auto; }
-  .modal-card{ width:100%; max-width:420px; background:linear-gradient(180deg,#061a2b,#03101b); padding:22px; border-radius:12px; border:1px solid rgba(255,255,255,0.03); text-align:center; color:var(--muted) }
-  .modal-card h3{ color:#fff; margin:6px 0 8px; }
-  .modal-card p{ margin:0 0 12px; }
-
-  /* responsiveness */
-  @media (max-width:560px){
-    body{ padding:18px }
-    .card{ padding:18px; border-radius:12px }
-    .seats-pill{ top:12px; right:12px; font-size:12px; padding:6px 10px }
-    .wm img{ width:240px }
-    h1{ font-size:22px }
+  /* cursor trail + outer glow */
+  #cursorDot{
+    position:fixed; width:18px; height:18px; border-radius:50%; pointer-events:none; z-index:9998; transform: translate(-50%,-50%); mix-blend-mode: screen; transition: transform .06s linear, opacity .12s linear; box-shadow: 0 0 0 8px rgba(26,108,255,0.06), 0 0 30px rgba(26,108,255,0.12);
+    background: radial-gradient(circle at 40% 35%, rgba(255,255,255,0.95), rgba(26,108,255,0.85)); opacity:0;
   }
+  .trail-bubble{ position:fixed; width:12px; height:12px; border-radius:50%; pointer-events:none; z-index:9997; transform: translate(-50%,-50%); background: var(--trail-color); opacity:.9; mix-blend-mode: screen; filter: blur(8px); transition: transform .8s cubic-bezier(.2,.9,.2,1), opacity .8s linear; }
+
+  @media (max-width:560px){ body{ padding:18px } .card{ padding:18px; border-radius:12px } .wm img{ width:240px } h1{ font-size:22px } }
 </style>
 </head>
 <body>
@@ -93,13 +90,18 @@
     <div class="glow-small" id="glowS"></div>
   </div>
 
-  <!-- watermark logo cluster (replace with your assets) -->
+  <!-- watermark logos: add assets/logo-5.svg and logo-6.svg to your assets folder -->
   <div class="watermark-cluster" aria-hidden="true">
-    <div class="wm w1" id="wm0"><img src="assets/logo-1.svg" alt="" /></div>
-    <div class="wm w2" id="wm1"><img src="assets/logo-2.svg" alt="" /></div>
-    <div class="wm w3" id="wm2"><img src="assets/logo-3.svg" alt="" /></div>
-    <div class="wm w4" id="wm3"><img src="assets/logo-4.svg" alt="" /></div>
+    <div class="wm w1 anim" id="wm0"><img src="assets/logo-1.svg" alt=""/></div>
+    <div class="wm w2 anim" id="wm1"><img src="assets/logo-2.svg" alt=""/></div>
+    <div class="wm w3 anim" id="wm2"><img src="assets/logo-3.svg" alt=""/></div>
+    <div class="wm w4 anim" id="wm3"><img src="assets/logo-4.svg" alt=""/></div>
+    <div class="wm w5 anim" id="wm4"><img src="assets/logo-5.svg" alt=""/></div>
+    <div class="wm w6 anim" id="wm5"><img src="assets/logo-6.svg" alt=""/></div>
   </div>
+
+  <!-- floating cursor dot + trail container -->
+  <div id="cursorDot" aria-hidden="true"></div>
 
   <div class="card" role="main" id="card">
     <div class="top">
@@ -150,103 +152,45 @@
       <div class="manual" id="manualText">Reviewed manually · No auto-approvals</div>
       <div class="muted">Applications close once seats are filled</div>
     </div>
-
-    <!-- seats pill -->
-    <div class="seats-pill" id="seatsPill" title="Seats left">
-      Seats left: <strong id="seatsCount">7</strong>
-    </div>
   </div>
 
-  <!-- success modal -->
-  <div class="modal" id="modal">
-    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="mTitle">
-      <h3 id="mTitle">Application received</h3>
-      <p>Thanks — we review submissions manually. We'll contact approved applicants soon.</p>
+  <!-- success modal (kept) -->
+  <div class="modal" id="modal" style="display:none;opacity:0;position:fixed;inset:0;align-items:center;justify-content:center;z-index:9999;background:rgba(3,6,10,0.6);">
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="mTitle" style="width:100%;max-width:420px;background:linear-gradient(180deg,#061a2b,#03101b);padding:22px;border-radius:12px;border:1px solid rgba(255,255,255,0.03);text-align:center;color:var(--muted);">
+      <h3 id="mTitle" style="color:#fff;margin:6px 0 8px;">Application received</h3>
+      <p id="mDesc" style="margin:0 0 12px;">Thanks — we review submissions manually. We'll contact approved applicants soon.</p>
       <button onclick="closeModal()" style="background:var(--accent-end);border:none;padding:10px 12px;border-radius:8px;font-weight:700;cursor:pointer;">Close</button>
     </div>
   </div>
 
 <script>
-  // i18n strings (light)
+  // i18n
   const translations = {
     en:{title:'Affiliate Application', subtitle:'We’re onboarding a small circle of partners. Apply now — approved applicants get direct access.', labelName:'Full Name', labelEmail:'Email Address', labelContact:'Telegram / WhatsApp', labelTraffic:'Main Traffic Source', labelNote:'Short Note', apply:'Apply Now', manual:'Reviewed manually · No auto-approvals', sent:'Application received', sentDesc:'Thanks — we review submissions manually. We will contact approved applicants.'},
     ar:{title:'نموذج التقديم للشركاء', subtitle:'نقوم بضم مجموعة صغيرة من الشركاء. قدّم الآن — سنتواصل مع المقبولين مباشرةً.', labelName:'الاسم الكامل', labelEmail:'البريد الإلكتروني', labelContact:'تلغرام / واتساب', labelTraffic:'مصدر الزيارات الرئيسي', labelNote:'ملاحظة قصيرة', apply:'قدّم الآن', manual:'يتم المراجعة يدويًا · لا توجد موافقات تلقائية', sent:'تم استلام طلبك', sentDesc:'شكرًا — سيتم مراجعة بياناتك يدويًا وسنتواصل مع المقبولين.'},
     es:{title:'Solicitud de Afiliado', subtitle:'Estamos incorporando un grupo pequeño de socios. Aplica ahora — los aprobados recibirán acceso directo.', labelName:'Nombre completo', labelEmail:'Correo electrónico', labelContact:'Telegram / WhatsApp', labelTraffic:'Fuente principal de tráfico', labelNote:'Nota breve', apply:'Aplicar ahora', manual:'Revisado manualmente · Sin aprobaciones automáticas', sent:'Solicitud recibida', sentDesc:'Gracias — revisaremos manualmente. Nos comunicaremos con los aprobados.'}
   };
-
-  // basic i18n apply
   const langSel = document.getElementById('langSelect');
-  function applyLang(l){ const d = translations[l]||translations.en;
-    document.getElementById('title').textContent = d.title;
-    document.getElementById('subtitle').textContent = d.subtitle;
-    document.getElementById('labelName').textContent = d.labelName;
-    document.getElementById('labelEmail').textContent = d.labelEmail;
-    document.getElementById('labelContact').textContent = d.labelContact;
-    document.getElementById('labelTraffic').textContent = d.labelTraffic;
-    document.getElementById('labelNote').textContent = d.labelNote;
-    document.getElementById('applyBtn').textContent = d.apply;
-    document.getElementById('manualText').textContent = d.manual;
-    document.documentElement.lang = l;
-    if(l==='ar'){ document.documentElement.dir='rtl'; document.getElementById('card').dir='rtl'; }
-    else{ document.documentElement.dir='ltr'; document.getElementById('card').dir='ltr'; }
-  }
+  function applyLang(l){ const d = translations[l]||translations.en; document.getElementById('title').textContent = d.title; document.getElementById('subtitle').textContent = d.subtitle; document.getElementById('labelName').textContent = d.labelName; document.getElementById('labelEmail').textContent = d.labelEmail; document.getElementById('labelContact').textContent = d.labelContact; document.getElementById('labelTraffic').textContent = d.labelTraffic; document.getElementById('labelNote').textContent = d.labelNote; document.getElementById('applyBtn').textContent = d.apply; document.getElementById('manualText').textContent = d.manual; document.documentElement.lang = l; if(l==='ar'){ document.documentElement.dir='rtl'; document.getElementById('card').dir='rtl'; } else{ document.documentElement.dir='ltr'; document.getElementById('card').dir='ltr'; } }
   langSel.addEventListener('change', ()=>applyLang(langSel.value));
   applyLang('en');
 
-  // seats logic (client-side visual only)
-  let seats = 7; // change start number here or fetch from backend
-  const seatsCount = document.getElementById('seatsCount');
-  const seatsPill = document.getElementById('seatsPill');
-  function updateSeats(){ seatsCount.textContent = seats; if(seats<=0){ seatsPill.style.opacity='.6'; document.getElementById('applyBtn').disabled = true; document.getElementById('applyBtn').textContent = 'Closed'; } }
-  updateSeats();
-
-  // form submit - replace commented fetch with your webhook
+  // form submit (placeholder)
   function submitForm(){
-    if(seats<=0) return;
-    const payload = {
-      name:document.getElementById('name').value.trim(),
-      email:document.getElementById('email').value.trim(),
-      contact:document.getElementById('contact').value.trim(),
-      traffic:document.getElementById('traffic').value,
-      note:document.getElementById('note').value.trim(),
-      lang: document.documentElement.lang || 'en'
-    };
-    // small client-side validation
-    if(!payload.name || !payload.email || !payload.contact || !payload.traffic){ alert('Please fill required fields'); return; }
-
-    // UI: disable + loader
+    const payload = { name:document.getElementById('name').value.trim(), email:document.getElementById('email').value.trim(), contact:document.getElementById('contact').value.trim(), traffic:document.getElementById('traffic').value, note:document.getElementById('note').value.trim(), lang:document.documentElement.lang||'en' };
+    if(!payload.name||!payload.email||!payload.contact||!payload.traffic){ alert('Please fill required fields'); return; }
     const btn = document.getElementById('applyBtn'); btn.disabled=true; const original = btn.textContent; btn.textContent='Sending...';
-
-    // TODO: replace with real fetch to your webhook/endpoint
-    // fetch('https://your-webhook-url', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload) })
-    //  .then(r=>r.ok ? onSuccess() : onError())
-    //  .catch(onError);
-
-    // Simulate success for now:
-    setTimeout(()=> { onSuccess(); }, 900);
-
-    function onSuccess(){
-      seats = Math.max(0, seats - 1); updateSeats();
-      openModal(translations[payload.lang||'en'].sent, translations[payload.lang||'en'].sentDesc);
-      btn.disabled=false; btn.textContent = original;
-      document.getElementById('applyForm').reset();
-    }
-    function onError(){
-      btn.disabled=false; btn.textContent = original;
-      alert('Error sending. Try again later.');
-    }
-    console.log('FORM PAYLOAD:', payload);
+    // replace with your webhook fetch
+    setTimeout(()=>{ btn.disabled=false; btn.textContent = original; openModal(translations[payload.lang||'en'].sent, translations[payload.lang||'en'].sentDesc); document.getElementById('applyForm').reset(); }, 900);
+    console.log('FORM PAYLOAD', payload);
   }
 
-  // modal logic
+  // modal control
   const modal = document.getElementById('modal');
-  function openModal(title, desc){
-    document.getElementById('mTitle').textContent = title || 'Sent';
-    modal.classList.add('open');
-  }
-  function closeModal(){ modal.classList.remove('open'); }
+  function openModal(title,desc){ document.getElementById('mTitle').textContent = title; document.getElementById('mDesc').textContent = desc; modal.style.display='flex'; setTimeout(()=>{ modal.style.opacity='1'; },10); }
+  function closeModal(){ modal.style.opacity='0'; setTimeout(()=>{ modal.style.display='none'; },220); }
 
-  // background interactivity (mouse + touch)
+  // background interactivity + watermark parallax
   const glowL = document.getElementById('glowL'), glowS = document.getElementById('glowS');
   const wms = Array.from(document.querySelectorAll('.wm'));
   const maxG = 28, maxW = 26;
@@ -265,13 +209,65 @@
       el.style.opacity = `${Math.max(0.03, 0.12 - d*0.08 - i*0.01)}`;
     });
   }
-  window.addEventListener('mousemove', e=>moveEffects(e.clientX, e.clientY));
-  window.addEventListener('click', e=>{ const c=document.getElementById('card'); if(!c.contains(e.target)) moveEffects(e.clientX,e.clientY); });
-  window.addEventListener('touchstart', e=>{ const t=e.touches[0]; const c=document.getElementById('card'); const r=c.getBoundingClientRect(); if(t.clientX>=r.left && t.clientX<=r.right && t.clientY>=r.top && t.clientY<=r.bottom) return; moveEffects(t.clientX,t.clientY); });
-  window.addEventListener('touchend', ()=>{ glowL.style.transform='translate3d(0,0,0)'; glowS.style.transform='translate3d(0,0,0)'; wms.forEach((el,i)=>{ el.style.filter='blur(6px)'; el.style.opacity=(0.08 - i*0.01); el.style.transform='translate(-50%,-50%)'; }); });
 
-  // keyboard: alt+L cycles languages
-  window.addEventListener('keydown', e=>{ if(e.altKey && e.key.toLowerCase()==='l'){ const m={'en':'ar','ar':'es','es':'en'}; const nxt = m[document.documentElement.lang||'en']; langSel.value=nxt; applyLang(nxt); }});
+  // cursor dot and trail
+  const cursor = document.getElementById('cursorDot');
+  let trailTimers = [];
+  let trailActive = false;
+
+  function createTrail(x,y){
+    const bubble = document.createElement('div');
+    bubble.className = 'trail-bubble';
+    bubble.style.left = x + 'px'; bubble.style.top = y + 'px';
+    document.body.appendChild(bubble);
+    // fade & remove
+    requestAnimationFrame(()=>{ bubble.style.transform = `translate(-50%,-50%) scale(3)`; bubble.style.opacity = '0'; });
+    setTimeout(()=>{ try{ document.body.removeChild(bubble); }catch(e){} }, 900);
+  }
+
+  // show/hide when over background (not over card)
+  function isOverCard(x,y){ const rect = document.getElementById('card').getBoundingClientRect(); return x>=rect.left && x<=rect.right && y>=rect.top && y<=rect.bottom; }
+
+  window.addEventListener('mousemove', e=>{
+    const x = e.clientX, y = e.clientY;
+    moveEffects(x,y);
+    if(!isOverCard(x,y)){
+      // show cursor + trail
+      cursor.style.opacity = '1'; cursor.style.left = x + 'px'; cursor.style.top = y + 'px';
+      // outer glow stronger
+      cursor.style.boxShadow = '0 0 0 10px rgba(26,108,255,0.10), 0 0 36px rgba(26,108,255,0.18)';
+      // create trail bubbles at intervals
+      if(!trailActive){ trailActive = true; trailTimers.push(setInterval(()=> createTrail(x,y), 90)); }
+    } else {
+      // hide cursor when over card
+      cursor.style.opacity = '0'; cursor.style.boxShadow = '0 0 0 6px rgba(26,108,255,0.06), 0 0 30px rgba(26,108,255,0.12)';
+      // clear trail
+      trailTimers.forEach(t=>clearInterval(t)); trailTimers = []; trailActive = false;
+    }
+  });
+
+  // click on empty space intensify
+  window.addEventListener('click', e=>{ if(!isOverCard(e.clientX,e.clientY)){ createTrail(e.clientX,e.clientY); cursor.style.transform = 'translate(-50%,-50%) scale(1.35)'; setTimeout(()=> cursor.style.transform='translate(-50%,-50%) scale(1)',240); } });
+
+  // touch: show effect on touchstart outside card
+  window.addEventListener('touchstart', e=>{
+    const t = e.touches[0]; if(!t) return; if(isOverCard(t.clientX,t.clientY)) return; cursor.style.left = t.clientX + 'px'; cursor.style.top = t.clientY + 'px'; cursor.style.opacity = '1'; createTrail(t.clientX,t.clientY);
+    setTimeout(()=>{ cursor.style.opacity='0'; }, 700);
+  }, {passive:true});
+
+  window.addEventListener('touchend', ()=>{ cursor.style.opacity='0'; trailTimers.forEach(t=>clearInterval(t)); trailTimers=[]; trailActive=false; });
+
+  // click on blank: also move effects
+  window.addEventListener('click', e=>{ if(!isOverCard(e.clientX,e.clientY)){ moveEffects(e.clientX,e.clientY); } });
+
+  // touchmove optional to follow finger
+  window.addEventListener('touchmove', e=>{ const t = e.touches[0]; if(!t) return; moveEffects(t.clientX,t.clientY); });
+
+  // keyboard lang toggle
+  window.addEventListener('keydown', e=>{ if(e.altKey && e.key.toLowerCase()==='l'){ const map={'en':'ar','ar':'es','es':'en'}; const next = map[document.documentElement.lang||'en']; langSel.value=next; applyLang(next); } });
+
+  // simple applyLang function reuse
+  function applyLang(l){ const d = translations[l]||translations.en; document.getElementById('title').textContent = d.title; document.getElementById('subtitle').textContent = d.subtitle; document.getElementById('labelName').textContent = d.labelName; document.getElementById('labelEmail').textContent = d.labelEmail; document.getElementById('labelContact').textContent = d.labelContact; document.getElementById('labelTraffic').textContent = d.labelTraffic; document.getElementById('labelNote').textContent = d.labelNote; document.getElementById('applyBtn').textContent = d.apply; document.getElementById('manualText').textContent = d.manual; document.documentElement.lang = l; if(l==='ar'){ document.documentElement.dir='rtl'; document.getElementById('card').dir='rtl'; } else{ document.documentElement.dir='ltr'; document.getElementById('card').dir='ltr'; } }
 </script>
 </body>
 </html>
