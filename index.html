@@ -10,137 +10,137 @@
     --bg-1: #041025;
     --bg-2: #020a18;
     --glass: rgba(255, 255, 255, 0.03);
-    --border: rgba(255, 255, 255, 0.08);
-    --text-muted: rgba(230, 238, 248, 0.7);
+    --border: rgba(255, 255, 255, 0.1);
+    --text-muted: rgba(230, 238, 248, 0.6);
   }
 
   body {
     margin: 0; font-family: 'Inter', system-ui, sans-serif;
     background-color: var(--bg-1); color: #fff;
-    display: flex; align-items: center; justify-content: center;
-    min-height: 100vh; overflow-x: hidden;
+    min-height: 100vh; display: flex; align-items: center; justify-content: center;
+    padding: 20px; box-sizing: border-box; overflow-x: hidden;
   }
 
-  /* ALIVE BACKGROUND */
-  .bg-elements { position: fixed; inset: 0; z-index: -1; background: radial-gradient(circle at 50% 50%, var(--bg-1), var(--bg-2)); }
-  .floating-logo {
-    position: absolute; color: rgba(255,255,255,0.03); font-weight: 900; font-size: 120px;
-    user-select: none; pointer-events: none; animation: float 20s infinite linear;
+  /* FIXED BACKGROUND ENGINE */
+  .bg-canvas {
+    position: fixed; inset: 0; z-index: -1;
+    background: radial-gradient(circle at 50% 50%, var(--bg-1), var(--bg-2));
+    overflow: hidden;
   }
-  @keyframes float {
-    0% { transform: translateY(0) rotate(0deg); opacity: 0; }
-    10% { opacity: 1; }
-    90% { opacity: 1; }
-    100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+  .floating-char {
+    position: absolute; color: rgba(255,255,255,0.04); font-weight: 900;
+    user-select: none; pointer-events: none;
+    will-change: transform;
+    animation: floatUp linear infinite;
+  }
+  @keyframes floatUp {
+    0% { transform: translateY(110vh) rotate(0deg); opacity: 0; }
+    20% { opacity: 1; }
+    80% { opacity: 1; }
+    100% { transform: translateY(-20vh) rotate(360deg); opacity: 0; }
   }
 
   /* CARD STYLE */
   .card {
-    width: 100%; max-width: 480px; padding: 40px; border-radius: 28px;
+    width: 100%; max-width: 520px; padding: 40px; border-radius: 28px;
     background: var(--glass); border: 1px solid var(--border);
-    backdrop-filter: blur(20px); box-shadow: 0 40px 100px rgba(0,0,0,0.5);
-    animation: slideIn 0.8s cubic-bezier(0.2, 1, 0.2, 1);
+    backdrop-filter: blur(25px); box-shadow: 0 40px 100px rgba(0,0,0,0.6);
+    position: relative; z-index: 10;
   }
-  @keyframes slideIn { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-
   .badge {
     display: inline-block; padding: 4px 12px; border-radius: 99px;
     background: rgba(43, 101, 255, 0.15); color: var(--brand);
     font-size: 11px; font-weight: 800; letter-spacing: 1px; margin-bottom: 16px;
     border: 1px solid rgba(43, 101, 255, 0.3);
   }
+  h1 { font-size: 32px; margin: 0 0 8px; font-weight: 800; letter-spacing: -1px; }
+  p.sub { color: var(--text-muted); margin-bottom: 30px; font-size: 15px; }
 
-  h1 { font-size: 32px; margin: 0 0 10px; font-weight: 800; letter-spacing: -1px; }
-  p.sub { color: var(--text-muted); margin-bottom: 32px; font-size: 15px; line-height: 1.5; }
-
-  /* FORM FIELDS */
+  /* RESTORED FORM FIELDS */
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
   .field { margin-bottom: 20px; }
-  label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 8px; color: rgba(255,255,255,0.9); }
+  .full-width { grid-column: span 2; }
+  label { display: block; font-size: 12px; font-weight: 700; margin-bottom: 8px; color: var(--brand); text-transform: uppercase; }
   input, select, textarea {
     width: 100%; padding: 14px 16px; border-radius: 12px; border: 1px solid var(--border);
-    background: rgba(0,0,0,0.2); color: #fff; font-size: 15px; outline: none; transition: 0.3s;
+    background: rgba(0,0,0,0.3); color: #fff; font-size: 15px; outline: none; transition: 0.3s;
     box-sizing: border-box;
   }
-  input:focus { border-color: var(--brand); box-shadow: 0 0 0 4px rgba(43, 101, 255, 0.15); }
+  input:focus, select:focus, textarea:focus { border-color: var(--brand); background: rgba(0,0,0,0.5); }
 
   .btn {
     width: 100%; padding: 16px; border-radius: 14px; border: 0;
-    background: var(--brand); color: #fff; font-weight: 700; font-size: 16px;
-    cursor: pointer; transition: 0.3s; margin-top: 10px;
-    box-shadow: 0 10px 25px rgba(43, 101, 255, 0.3);
+    background: var(--brand); color: #fff; font-weight: 800; font-size: 16px;
+    cursor: pointer; transition: 0.3s; box-shadow: 0 10px 25px rgba(43, 101, 255, 0.3);
   }
   .btn:hover { transform: translateY(-2px); box-shadow: 0 15px 35px rgba(43, 101, 255, 0.5); }
 </style>
 </head>
 <body>
 
-  <div class="bg-elements" id="bg"></div>
+  <div class="bg-canvas" id="bgEngine"></div>
 
-  <div class="card" id="card">
-    <div class="badge">SENIOR MANAGER SELECTION</div>
-    <h1>Join the Circle</h1>
-    <p class="sub">I don't work with everyone. Tell me about your traffic and let's scale your revenue.</p>
+  <div class="card">
+    <div class="badge">APPLICATION FORM</div>
+    <h1>Join the Elite</h1>
+    <p class="sub">Complete your details to apply for the private partner circle.</p>
 
-    <form id="appForm">
-      <div class="field">
-        <label>Telegram / Contact</label>
-        <input type="text" name="contact" placeholder="@username" required>
+    <form onsubmit="event.preventDefault(); alert('Application sent to Zayn1x.');">
+      <div class="form-grid">
+        <div class="field full-width">
+          <label>Full Name</label>
+          <input type="text" placeholder="Your name" required>
+        </div>
+        <div class="field">
+          <label>Telegram User</label>
+          <input type="text" placeholder="@username" required>
+        </div>
+        <div class="field">
+          <label>Email Address</label>
+          <input type="email" placeholder="email@example.com" required>
+        </div>
+        <div class="field">
+          <label>Main Traffic Source</label>
+          <select required>
+            <option value="">Select source...</option>
+            <option>Facebook / Instagram</option>
+            <option>TikTok / Reels</option>
+            <option>SEO / Google</option>
+            <option>WhatsApp / Telegram Groups</option>
+            <option>Media Buying</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Current Daily FTDs</label>
+          <input type="number" placeholder="0" required>
+        </div>
+        <div class="field full-width">
+          <label>Experience & Past Results</label>
+          <textarea rows="3" placeholder="Tell me about your previous work..."></textarea>
+        </div>
       </div>
-      <div class="field">
-        <label>Main Traffic Source</label>
-        <select name="source">
-          <option value="seo">SEO / Google</option>
-          <option value="social">Social Media (TT/IG/FB)</option>
-          <option value="media">Media Buying</option>
-          <option value="other">Influencer / Groups</option>
-        </select>
-      </div>
-      <div class="field">
-        <label>Monthly FTD Volume</label>
-        <input type="number" name="volume" placeholder="Expected new players/mo">
-      </div>
-      <div class="field">
-        <label>Your Strategy (Short)</label>
-        <textarea name="strategy" rows="3" placeholder="How do you get your users?"></textarea>
-      </div>
-      <button type="submit" class="btn" id="submitBtn">Submit Application</button>
+      <button type="submit" class="btn">Submit Application</button>
     </form>
   </div>
 
   <script>
-    // Create floating background logos
-    const bg = document.getElementById('bg');
-    const icons = ['1', 'X', '1', 'B', 'E', 'T'];
-    for(let i=0; i<15; i++) {
-      const div = document.createElement('div');
-      div.className = 'floating-logo';
-      div.innerText = icons[Math.floor(Math.random()*icons.length)];
-      div.style.left = Math.random() * 100 + 'vw';
-      div.style.animationDelay = Math.random() * 20 + 's';
-      div.style.fontSize = (Math.random() * 100 + 50) + 'px';
-      bg.appendChild(div);
+    const engine = document.getElementById('bgEngine');
+    const chars = ['1', 'X', 'B', 'E', 'T'];
+    function createChar() {
+      const el = document.createElement('div');
+      el.className = 'floating-char';
+      el.innerText = chars[Math.floor(Math.random() * chars.length)];
+      el.style.left = Math.random() * 100 + 'vw';
+      el.style.fontSize = (Math.random() * 80 + 40) + 'px';
+      el.style.animationDuration = (Math.random() * 10 + 10) + 's';
+      el.style.animationDelay = (Math.random() * 5) + 's';
+      engine.appendChild(el);
+      // Remove element after animation to save memory
+      setTimeout(() => el.remove(), 20000);
     }
-
-    // Form Handling
-    document.getElementById('appForm').addEventListener('submit', function(e) {
-      e.preventDefault();
-      const btn = document.getElementById('submitBtn');
-      btn.innerText = "Processing...";
-      btn.style.opacity = "0.7";
-      
-      // Simulate Success
-      setTimeout(() => {
-        document.getElementById('card').innerHTML = `
-          <div style="text-align:center; padding: 40px 0;">
-            <div style="font-size: 50px; margin-bottom: 20px;">🚀</div>
-            <h2 style="margin:0 0 10px;">Application Received</h2>
-            <p style="color:var(--text-muted)">I will review your traffic and contact you on Telegram shortly.</p>
-            <br>
-            <a href="https://t.me/ZAYN1x" style="color:var(--brand); text-decoration:none; font-weight:700;">Wait too long? DM Me Directly →</a>
-          </div>
-        `;
-      }, 1500);
-    });
+    // Initial batch and continuous generation
+    for(let i=0; i<15; i++) createChar();
+    setInterval(createChar, 1500);
   </script>
 </body>
 </html>
